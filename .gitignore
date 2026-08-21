@@ -1,0 +1,10 @@
+# Real config — contains the server password. NEVER commit.
+.env
+
+# Runtime state, bind-mounted from the compose file. Not source.
+config/
+data/
+
+# Editor / OS noise
+*.swp
+.DS_Store
