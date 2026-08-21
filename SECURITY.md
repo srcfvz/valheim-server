@@ -71,13 +71,38 @@ that actually matters here.
 ## SSH hardening
 
 Applied by `bootstrap.sh`, and **only after key login is verified working** — so
-there is no way to lock ourselves out:
+there is no way to lock ourselves out. `/etc/ssh/sshd_config.d/`:
 
-- `PasswordAuthentication no` — retires the provider-emailed root password,
-  which is otherwise a standing brute-force target
-- `PermitRootLogin prohibit-password`
-- `fail2ban` on the SSH jail
-- unattended security upgrades
+| Setting | Value |
+|---|---|
+| `PasswordAuthentication` | `no` — retires the provider-emailed root password |
+| `PermitRootLogin` | `prohibit-password` |
+| `KbdInteractiveAuthentication` | `no` |
+| `MaxAuthTries` | `3` |
+| `LoginGraceTime` | `30` |
+| `X11Forwarding` / `AllowAgentForwarding` | `no` |
+| `PermitEmptyPasswords` | `no` |
+| `ClientAliveInterval` / `CountMax` | `300` / `2` |
+
+> `AllowTcpForwarding` is deliberately left **enabled**. It is the documented way
+> to reach the host-local status page (`ssh -L 9080:127.0.0.1:9080`), and it
+> defends nothing here: anyone holding this key already has root on the box.
+
+## Other host hardening
+
+| Control | State |
+|---|---|
+| `fail2ban` | Active, `sshd` jail — 5 retries / 10 min → 1 h ban |
+| Automatic security updates | `dnf5-automatic.timer`, `upgrade_type = security`, `apply_updates = yes` |
+| LLMNR / mDNS | **Disabled** in `systemd-resolved` — port `5355` was listening on `0.0.0.0` out of the box and is now gone entirely |
+| Kernel / network `sysctl` | `/etc/sysctl.d/99-hardening.conf` — no redirects (accept/send), no source routing, `tcp_syncookies`, `kptr_restrict=2`, `dmesg_restrict=1` |
+| Container | `no-new-privileges:true`, `pids_limit`, `mem_limit`, `cpus`, `oom_score_adj`, own bridge network |
+
+> **`fail2ban` gets stopped when `firewalld` starts.** The `fail2ban-firewalld`
+> subpackage ties the two together, so bringing firewalld up *after* fail2ban
+> silently leaves fail2ban dead. Order matters, or restart fail2ban afterwards —
+> `bootstrap.sh` now starts firewalld first. Verify with
+> `systemctl is-active fail2ban` after any firewall change.
 
 ## Blast radius
 
