@@ -142,6 +142,50 @@ raise the cap past ~6.5 GB or the OS loses its own headroom.
 causes are a malformed `.env` value or a corrupted world file — in which case,
 restore from a backup above.
 
+## Changing the firewall safely
+
+Two traps, both hit for real on this box:
+
+**1. Starting `firewalld` stops `fail2ban`.** The `fail2ban-firewalld` subpackage
+couples them. Always restart fail2ban *after* any firewalld start/restart, and
+verify:
+
+```bash
+ssh valheim 'systemctl start firewalld && sleep 3 && systemctl restart fail2ban
+             echo "firewalld: $(systemctl is-active firewalld)"
+             echo "fail2ban : $(systemctl is-active fail2ban)"'
+```
+
+**2. Disarm every deadman you arm.** When enabling a firewall over SSH it is
+right to arm a rollback first:
+
+```bash
+ssh valheim 'nohup bash -c "sleep 240; systemctl stop firewalld" >/dev/null 2>&1 &'
+```
+
+But if the attempt fails and you retry, you now have **two** timers pending. One
+of them fired here minutes later and silently took the firewall down — and
+fail2ban with it. Before considering the change done:
+
+```bash
+ssh valheim 'ps -eo pid,etimes,args | grep -E "[s]leep [0-9]+"'   # must be empty
+```
+
+Do **not** disarm with `pkill -f "sleep 240"` — the pattern matches the
+invoking shell's own command line, so pkill kills its own session and the rest
+of the command never runs. Kill it by PID instead.
+
+## Verifying the game is still reachable after a firewall change
+
+Docker publishes ports *past* firewalld, so the game should be unaffected — but
+verify rather than assume:
+
+```bash
+ssh valheim 'timeout 12 tcpdump -ni eth0 "udp port 2456" -c 4'
+# from another machine, meanwhile:
+python3 -c "import socket;s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM);s.sendto(b'x',('91.99.190.110',2456))"
+```
+
 ## Decommissioning
 
 ```bash
