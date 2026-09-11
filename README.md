@@ -2,6 +2,8 @@
 
 A containerized **Valheim dedicated server** on its own Hetzner instance.
 
+> **Status:** decommissioned. Deployed on Hetzner Cloud in August 2026; the instance has since been deleted. IPs and keys in these docs are replaced with reserved documentation addresses. Kept as a reference for the deployment and the firewall troubleshooting.
+
 This directory holds everything needed to build, deploy and operate it:
 the compose stack, the host bootstrap, and the docs describing exactly what
 was done and why.
@@ -10,7 +12,7 @@ was done and why.
 
 | File | What's in it |
 |---|---|
-| `SERVER.md` | The machine: IP, location, specs, the SSH key we use, and the purpose |
+| `SERVER.md` | The machine: IP, location, specs, the SSH key (omitted), and the purpose |
 | `DEPLOY.md` | Step-by-step record of the deployment — decisions, what ran, what's open |
 | `SECURITY.md` | Port map, firewall rules, and the SSH hardening applied |
 | `OPERATIONS.md` | Day-2: backups, world restore, updates, troubleshooting |
