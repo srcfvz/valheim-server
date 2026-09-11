@@ -123,7 +123,7 @@ ssh valheim 'ss -lnup | grep 245'                            # listening on UDP?
 ssh valheim 'firewall-cmd --list-ports'                      # host firewall
 # then check the Hetzner Cloud Firewall in the console — it sits in front of the
 # VM, so a rule missing there looks exactly like a dead server from outside
-nmap -sU -p 2456-2457 91.99.190.110                          # from outside
+nmap -sU -p 2456-2457 203.0.113.10                          # from outside
 ```
 
 **"Wrong password" for everyone.** `SERVER_PASS` must be >= 5 chars and must not
@@ -183,7 +183,7 @@ verify rather than assume:
 ```bash
 ssh valheim 'timeout 12 tcpdump -ni eth0 "udp port 2456" -c 4'
 # from another machine, meanwhile:
-python3 -c "import socket;s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM);s.sendto(b'x',('91.99.190.110',2456))"
+python3 -c "import socket;s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM);s.sendto(b'x',('203.0.113.10',2456))"
 ```
 
 ## Decommissioning
@@ -193,6 +193,6 @@ ssh valheim 'cd /opt/valheim && docker compose down'
 scp valheim:/opt/valheim/config/backups/*.tgz ./world-archive/   # keep the world
 ```
 Then delete the server in the Hetzner console, remove the key
-(`ssh-keygen -R 91.99.190.110`, delete `~/.ssh/id_ed25519_valheim*`), drop the
+(`ssh-keygen -R 203.0.113.10`, delete `~/.ssh/id_ed25519_valheim*`), drop the
 `Host valheim` block from `~/.ssh/config`, and remove the key row from
 `homelab/AGENTS.md`.

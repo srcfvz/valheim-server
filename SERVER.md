@@ -11,8 +11,8 @@ box that runs the game and nothing else.
 
 | | |
 |---|---|
-| **Public IPv4** | `91.99.190.110` |
-| **Public IPv6** | `2a01:4f8:c014:6a82::/64` |
+| **Public IPv4** | `203.0.113.10` |
+| **Public IPv6** | `2001:db8:1234:5678::/64` |
 | **Provider** | Hetzner Cloud |
 | **Instance name** | `fedora-8gb-valheimsrcfvz` |
 | **Plan** | CX33 — x86_64, 4 vCPU, 8 GB RAM (7737 MB usable), 80 GB disk |
@@ -38,12 +38,12 @@ We use **one dedicated key, scoped to this machine only**:
 | **Fingerprint** | `SHA256:UHB2lC/qun6wB+kAFN+mdhui91Wn85lFF7FJ4mhyJSM` |
 | **Comment** | `valheim-hetzner src21@biscuite 2026-08-21` |
 | **Created** | 2026-08-21 |
-| **Logs in as** | `root@91.99.190.110` |
+| **Logs in as** | `root@203.0.113.10` |
 
 Public key (paste target for the Hetzner console):
 
 ```
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJCaBq1iSzUAb40i3dcm0vqTyem34Z49tvC5nOCtW0bK valheim-hetzner src21@biscuite 2026-08-21
+ssh-ed25519 AAAA…(public key omitted) valheim-hetzner
 ```
 
 ### Why a separate key, and why no passphrase
@@ -72,8 +72,8 @@ rm ~/.ssh/id_ed25519_valheim ~/.ssh/id_ed25519_valheim.pub
 Added to `~/.ssh/config` on `biscuite`:
 
 ```
-Host valheim 91.99.190.110
-  HostName 91.99.190.110
+Host valheim 203.0.113.10
+  HostName 203.0.113.10
   User root
   IdentityFile ~/.ssh/id_ed25519_valheim
   IdentitiesOnly yes

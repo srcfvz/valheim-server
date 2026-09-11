@@ -32,7 +32,7 @@ Recorded in `homelab/AGENTS.md`.
 
 ## Step 2 — Server provisioned [DONE] (by hand, in the Hetzner console)
 
-`fedora-8gb-valheimsrcfvz` — `91.99.190.110`, Hetzner Cloud, Helsinki (`HEL1`),
+`fedora-8gb-valheimsrcfvz` — `203.0.113.10`, Hetzner Cloud, Helsinki (`HEL1`),
 CX33 / Fedora Linux 44. Verified from the box itself: `x86_64`, 4 vCPU,
 7737 MB RAM, 71 GB free.
 
@@ -60,7 +60,7 @@ Host key recorded in `SERVER.md`. If you ever recreate the box, clear the stale
 entry first or SSH will refuse to connect:
 
 ```bash
-ssh-keygen -R 91.99.190.110
+ssh-keygen -R 203.0.113.10
 ```
 
 ## Step 4 — Host bootstrap [DONE]
@@ -121,8 +121,8 @@ appears in the Steam browser. That is normal, not a hang.
 
 ```
 Session "Valheim src21" registered with join code 460282
-This is the serverIP used to register the server: 91.99.190.110:2456
-Session "Valheim src21" with join code 460282 and IP 91.99.190.110:2456
+This is the serverIP used to register the server: 203.0.113.10:2456
+Session "Valheim src21" with join code 460282 and IP 203.0.113.10:2456
   is active with 0 player(s)
 ```
 
@@ -131,7 +131,7 @@ sending UDP from an external host — packets arrive on `eth0` and are forwarded
 across the docker bridge to the container at `172.18.0.2`:
 
 ```
-eth0            In  IP <ext>.58602 > 91.99.190.110.2456: UDP, length 25
+eth0            In  IP <ext>.58602 > 203.0.113.10.2456: UDP, length 25
 br-8f61c2ea53f1 Out IP <ext>.58602 > 172.18.0.2.2456:    UDP, length 25
 veth3b9e181     Out IP <ext>.58602 > 172.18.0.2.2456:    UDP, length 25
 ```
@@ -153,12 +153,12 @@ ssh valheim 'docker stats --no-stream valheim-server'   # confirm under the cap
 
 From outside, confirm the game port answers:
 ```bash
-nmap -sU -p 2456-2457 91.99.190.110      # expect open|filtered
+nmap -sU -p 2456-2457 203.0.113.10      # expect open|filtered
 ```
 
 ## Step 7 — Connect
 
-In Valheim: **Join Game -> Join by IP ->** `91.99.190.110:2456`, then the server
+In Valheim: **Join Game -> Join by IP ->** `203.0.113.10:2456`, then the server
 password from `.env`.
 
 If the server does not appear in the community browser, join by IP — the browser
